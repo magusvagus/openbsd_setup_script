@@ -1,1 +1,12 @@
-test
+OpenBSD setup script
+
+This script sets up the OpenBSD system for personal use.
+
+- Network
+- Hostname
+- Installs tools
+- Starts and sets up deamons
+- downloads and installs dotfiles repo
+- reboots into full desktop enviroment
+
+WORK IN PROGRESS
