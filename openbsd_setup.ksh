@@ -23,7 +23,7 @@ while [[ $TIMEOUT -ne 3 ]]; do
 	else
 		printf "[ !! ] Can't reach network, retrying...\n"
 		sleep 1
-		(TIMEOUT++)
+		(( TIMEOUT++ ))
 	fi
 done
 
