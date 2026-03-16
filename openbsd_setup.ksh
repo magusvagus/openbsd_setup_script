@@ -1,6 +1,7 @@
 #!/bin/ksh
 TIMEOUT=0
 LOOP="true"
+WIFI=$(dmesg | grep Wireless)
 
 #test for root
 if [[ "$(id -u)" -ne 0 ]]; then
@@ -29,7 +30,25 @@ while [[ $TIMEOUT -ne 3 ]]; do
 	fi
 done
 
-printf "done\n"
-# prinf ">>> Network setup.\n"
+printf ">>> Wireless setup\n"
+if [[ -z $WIFI ]]; then
+	printf "No WIFI detected\n"
+else
+	WIFI=$(echo "$WIFI" | awk '{print $1}')
+	printf "WIFI detected, interface: %s, $WIFI\n"
+
+	LOOP='true'
+	while [[ $LOOP == 'true' ]]; do
+		printf ">>> Scan or connect to WIFI? [y/n/s]\n"
+		read ANSWER
+
+		if [[ $ANSWER = "y" ]]; then
+		elif [[ $ANSWER = "s" ]]; then
+			ifconfig $WIFI scan | less
+		elif [[ $ANSWER = "n" ]]; then
+
+	done
+fi
+
 # while [[ $LOOP == 'true' ]]
 
