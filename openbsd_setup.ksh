@@ -43,9 +43,18 @@ else
 		read ANSWER
 
 		if [[ $ANSWER = "y" ]]; then
+			printf ">>> Enter SSID: "
+			read SSID
+			printf ">>> Enter WPAKEY: "
+			read WPAKEY
+			ifconfig join $SSID wpakey $WPAKEY lladdr random
+
 		elif [[ $ANSWER = "s" ]]; then
+
 			ifconfig $WIFI scan | less
 		elif [[ $ANSWER = "n" ]]; then
+			break
+
 
 	done
 fi
