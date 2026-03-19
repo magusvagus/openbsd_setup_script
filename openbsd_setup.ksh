@@ -1,7 +1,7 @@
 #!/bin/ksh
 TIMEOUT=0
 LOOP="true"
-WIFI=$(dmesg | grep Wireless)
+WIFI=$(dmesg | grep Wireless | awk '{print $1}')
 
 #test for root
 if [[ "$(id -u)" -ne 0 ]]; then
@@ -32,10 +32,10 @@ done
 
 printf ">>> Wireless setup\n"
 if [[ -z $WIFI ]]; then
-	printf "No WIFI detected\n"
+	printf "[ ER ] No WIFI detected\n"
 else
 	WIFI=$(echo "$WIFI" | awk '{print $1}')
-	printf "WIFI detected, interface: %s, $WIFI\n"
+	printf "[ OK ] WIFI detected, interface: %s, $WIFI\n"
 
 	LOOP='true'
 	while [[ $LOOP == 'true' ]]; do
@@ -48,14 +48,11 @@ else
 			printf ">>> Enter WPAKEY: "
 			read WPAKEY
 			ifconfig join $SSID wpakey $WPAKEY lladdr random
-
 		elif [[ $ANSWER = "s" ]]; then
-
 			ifconfig $WIFI scan | less
 		elif [[ $ANSWER = "n" ]]; then
 			break
-
-
+		fi
 	done
 fi
 
