@@ -12,9 +12,10 @@ else
 fi
 
 printf ">>> Testing network connection.\n"
+sleep 1
 while [[ $TIMEOUT -ne 3 ]]; do
 
-	ping -c 1 -W 1 9.9.9.9 >/dev/null 2>&1
+	ping -c 3 -W 1 9.9.9.9 >/dev/null 2>&1
 	if [[ $? -eq 0 ]]; then
 		printf "[ !! ] Can't reach network, retrying...\n"
 		sleep 1
@@ -25,12 +26,13 @@ while [[ $TIMEOUT -ne 3 ]]; do
 			break
 		fi
 	else
-		printf '[ OK ] You are online.\n'
+		printf "[ OK ] You are online.\n"
 		break
 	fi
 done
 
 printf ">>> Wireless setup\n"
+sleep 1
 if [[ -z $WIFI ]]; then
 	printf "[ ER ] No WIFI detected\n"
 else
@@ -48,6 +50,23 @@ else
 			printf ">>> Enter WPAKEY: "
 			read WPAKEY
 			ifconfig join $SSID wpakey $WPAKEY lladdr random
+			printf ">>> Connecting...\n"
+			sleep 1
+			sh /etc/netstart $WIFI
+
+			# test connection
+			if ping -c 3 9.9.9.9 > /dev/null 2>&1; then
+				printf "[ !! ] Can't reach network, retrying...\n"
+				sleep 1
+				(( TIMEOUT++ ))
+			if [[ $TIMEOUT -eq 3 ]]; then
+				printf "[ !! ] Could not connect to network.\n"
+				TIMEOUT=0
+			else
+				printf "[ OK ] You are online.\n"
+				break
+			fi
+
 		elif [[ $ANSWER = "s" ]]; then
 			ifconfig $WIFI scan | less
 		elif [[ $ANSWER = "n" ]]; then
