@@ -75,5 +75,6 @@ else
 	done
 fi
 
-# while [[ $LOOP == 'true' ]]
+# next creating hostname
+# add passkey to single user mode
 
