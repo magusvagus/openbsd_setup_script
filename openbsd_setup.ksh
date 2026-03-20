@@ -37,6 +37,7 @@ sleep 1
 if [[ -z $WIFI ]]; then
 	printf "[ ER ] No WIFI detected\n"
 else
+	# extract interface name
 	WIFI=$(echo "$WIFI" | awk '{print $1}')
 	printf "[ OK ] WIFI detected, interface: %s, $WIFI\n"
 
@@ -64,9 +65,17 @@ else
 				printf "[ !! ] Could not connect to network.\n"
 				TIMEOUT=0
 			else
+				# create hostname file
 				printf "[ OK ] You are online.\n"
+				printf ">>> Creating hostname file\n"
+				sleep 1
+				touch /etc/hostname.${WIFI}
+				printf "ifconfig join \"%s\" wpakey \"%s\" lladdr random" "$SSID" "$WPAKEY\ndhcp" >> /etc/hostname.${WIFI}
+				printf "[ OK ] hostfile.%s created.\n" "$WIFI"
+				sleep 1
 				break
 			fi
+
 
 		elif [[ $ANSWER = "s" ]]; then
 			ifconfig $WIFI scan | less
@@ -75,6 +84,7 @@ else
 		fi
 	done
 fi
+
 
 # next creating hostname file
 # add passkey to single user mode
