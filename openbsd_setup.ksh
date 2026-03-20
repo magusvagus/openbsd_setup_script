@@ -1,7 +1,7 @@
 #!/bin/ksh
 TIMEOUT=0
 LOOP="true"
-WIFI=$(dmesg | grep Wireless | awk '{print $1}')
+WIFI=$(dmesg | grep Wireless) 
 
 #test for root
 if [[ "$(id -u)" -ne 0 ]]; then
@@ -23,6 +23,7 @@ while [[ $TIMEOUT -ne 3 ]]; do
 
 		if [[ $TIMEOUT -eq 3 ]]; then
 			printf "[ !! ] Could not connect to network.\n"
+			TIMEOUT=0
 			break
 		fi
 	else
@@ -75,6 +76,6 @@ else
 	done
 fi
 
-# next creating hostname
+# next creating hostname file
 # add passkey to single user mode
 
