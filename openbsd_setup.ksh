@@ -87,14 +87,6 @@ else
 				printf "[ OK ] hostfile.%s created.\n" "$WIFI"
 				sleep 1
 
-				printf ">>> Setting up MAC randomization\n"
-				for ETH in "${ETH[@]}"; do
-					if [[ -e "/etc/hostname.$ETH" ]]; then
-						printf "inet autoconf lladdr rendom" > "/etc/hostname.$ETH"
-						printf "[ OK ] File /etc/hostname.%s edited\n" "$ETH"
-					fi
-				done
-
 				break
 			fi
 
@@ -109,7 +101,14 @@ else
 	done
 fi
 
+printf ">>> Setting up MAC randomization\n"
+for ETH in "${ETH[@]}"; do
+	if [[ -e "/etc/hostname.$ETH" ]]; then
+		printf "inet autoconf lladdr rendom" > "/etc/hostname.$ETH"
+		printf "[ OK ] File /etc/hostname.%s edited\n" "$ETH"
+	fi
+done
 
-# add MAC adress for ethernet ranomization
+
 # add passkey to single user mode
 
