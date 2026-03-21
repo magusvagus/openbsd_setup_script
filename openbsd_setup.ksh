@@ -3,6 +3,18 @@ TIMEOUT=0
 LOOP="true"
 WIFI=$(dmesg | grep Wireless) 
 
+# list of ethernet interface names
+set -A ETH	\
+	"em0"	\
+	"re0"	\
+	"ix0"	\
+	"nfe0"	\
+	"fxp0"	\
+	"sis0"	\
+	"pcn0"	\
+	"vr0"	\
+	"xl0"	\
+
 #test for root
 if [[ "$(id -u)" -ne 0 ]]; then
 	printf "[ ER ] Scrip must be run as root!\n";
@@ -67,12 +79,22 @@ else
 			else
 				# create hostname file
 				printf "[ OK ] You are online.\n"
+
 				printf ">>> Creating hostname file\n"
 				sleep 1
 				touch /etc/hostname.${WIFI}
 				printf "ifconfig join \"%s\" wpakey \"%s\" lladdr random" "$SSID" "$WPAKEY\ndhcp" >> /etc/hostname.${WIFI}
 				printf "[ OK ] hostfile.%s created.\n" "$WIFI"
 				sleep 1
+
+				printf ">>> Setting up MAC randomization\n"
+				for ETH in "${ETH[@]}"; do
+					if [[ -e "/etc/hostname.$ETH" ]]; then
+						printf "inet autoconf lladdr rendom" > "/etc/hostname.$ETH"
+						printf "[ OK ] File /etc/hostname.%s edited\n" "$ETH"
+					fi
+				done
+
 				break
 			fi
 
@@ -81,11 +103,13 @@ else
 			ifconfig $WIFI scan | less
 		elif [[ $ANSWER = "n" ]]; then
 			break
+		else
+			printf "[ ER ] Invalid input.\n"
 		fi
 	done
 fi
 
 
-# next creating hostname file
+# add MAC adress for ethernet ranomization
 # add passkey to single user mode
 
