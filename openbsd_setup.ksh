@@ -90,7 +90,6 @@ else
 				break
 			fi
 
-
 		elif [[ $ANSWER = "s" ]]; then
 			ifconfig $WIFI scan | less
 		elif [[ $ANSWER = "n" ]]; then
@@ -102,13 +101,29 @@ else
 fi
 
 printf ">>> Setting up MAC randomization\n"
+sleep 1
 for ETH in "${ETH[@]}"; do
 	if [[ -e "/etc/hostname.$ETH" ]]; then
 		printf "inet autoconf lladdr rendom" > "/etc/hostname.$ETH"
-		printf "[ OK ] File /etc/hostname.%s edited\n" "$ETH"
+		printf "[ OK ] File /etc/hostname.%s modified\n" "$ETH"
 	fi
 done
 
+printf ">>> Enable Single user password protection? [y/n] "
+sleep 1
+while true; do
+	read ANSWER
+	if [[ $ANSWER == 'y' ]]; then
+		sed -e '1,/^.*secure.*$/s/secure/insecure/' /etc/ttys > /tmp/temp.txt; 
+		mv /tmp/temp.txt /etc/tty; 
+		rm /tmp/temp.txt;
+		printf "[ OK ] File /etc/ttys modified.\n"
+		break
+	elif [[ $ANSWER == 'n' ]]; then
+		break
+	else
+		printf "[ ER ] Invalid input.\n"
+	fi
+done
 
-# add passkey to single user mode
 
