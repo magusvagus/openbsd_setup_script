@@ -126,4 +126,5 @@ while true; do
 	fi
 done
 
-
+# installing programs
+# afterboot setup
