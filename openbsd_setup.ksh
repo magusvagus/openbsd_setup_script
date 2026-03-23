@@ -126,5 +126,60 @@ while true; do
 	fi
 done
 
+printf ">>> Installing additional programs.\n"
+sleep 1
+pkg_add	\
+	vim-9.1.1706-gtk3	\
+	wget-1.25.0p0		\
+	curl-8.16.0			\
+	unzip-6.0p18		\
+	fzf-0.65.2			\
+	scrot-1.12.1		\
+	xbanish-1.8p0		\
+	keynav-0.20101014.3067p4v0	\
+	qutebrowser-3.5.1	\
+	cmus-2.12.0			\
+	mpv-0.40.0			\
+	mupdf-1.26.10		\
+	feh-3.10.3			\
+	ranger-1.9.4p0		\
+	nnn-5.1				\
+	links-1.03p0		\
+	lynx-2.9.2			\
+	wireshark-4.4.9		\
+	tshark-4.4.14		\
+	gcc-libs-8.4.0p28	\
+	minicom-2.8			\
+	httrack-3.48.21p3	\
+	git-2.51.0 			\
+	gdb-16.3			\
+	iftop-1.0pre4p4		\
+	sword-1.9.0p1		\
+	gnupg-2.4.9			\
+	mpd-0.24.5			\
+	picom-11.2p0		\
+	fastfetch-2.53.0	\
+	htop-3.4.1			\
+	btop-1.4.5			\
+	bat-0.25.0			\
+	lsd-1.1.5p2			\
+	tree-0.62			\
+	weechat-4.7.1		\
+	rtorrent-0.15.7v0	\
+	tor-0.4.8.21		\
+	tor-browser-15.0.7	\
+	xclip-0.13p1		\
+	py3-pip-25.2		\
+	py3-pipx-1.8.0		\
+	neovim-0.11.4 		\
+	clang-tools-extra-21.1.2	\ 
+	py3-python-lsp-server-1.12.2	\ 
+
+printf ">>> Installation complete.\n"
+sleep 1
+	
+# update system
+# apply syspatch
+# update firmware
 # installing programs
 # afterboot setup
