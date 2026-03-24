@@ -175,7 +175,7 @@ pkg_add	\
 	clang-tools-extra-21.1.2	\ 
 	py3-python-lsp-server-1.12.2	\ 
 
-printf ">>> Installation complete.\n"
+printf "[ OK ] Installation complete.\n"
 sleep 1
 	
 printf ">>> Setting up doas\n"
