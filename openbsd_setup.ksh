@@ -178,6 +178,32 @@ pkg_add	\
 printf ">>> Installation complete.\n"
 sleep 1
 	
+printf ">>> Setting up doas\n"
+sleep 1
+touch /etc/doas.conf
+chown root:wheel /etc/doas.conf
+chmod 0400 /etc/doas.conf
+
+printf "[ OK ] File /etc/doas.conf created.\n"
+sleep 1
+
+printf "
+permit persist keepenv :wheel
+permit persist keepenv :%s
+permit persist keepenv :users
+
+permit nopass %s as root cmd /sbin/reboot
+permit nopass %s as root cmd /sbin/init
+
+# permit this command for slstatus to use volume indication
+permit nopass %s as root cmd sndioctl args output.level
+# display brightness permission in .kshrc
+permit nopass %s as root cmd wsconsctl args display.brightness=" "$USER" "$USER" "$USER" "$USER" "$USER" \
+> /etc/doas.conf
+
+printf "[ OK ] File /etc/doas.conf modified.\n"
+sleep 1
+
 # update system
 # apply syspatch
 # update firmware
