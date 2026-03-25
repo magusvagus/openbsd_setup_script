@@ -204,6 +204,32 @@ permit nopass %s as root cmd wsconsctl args display.brightness=" "$USER" "$USER"
 printf "[ OK ] File /etc/doas.conf modified.\n"
 sleep 1
 
+printf ">>> Setting up Kernel options.\n"
+sleep 1
+
+touch /etc/sysctl.conf
+printf "[ OK ] File /etc/sysctl.conf created.\n"
+sleep 0.5
+
+HYPERTHREADING=$(sysctl hw.ncpu)
+# delete everything from output up to the number of threads
+HYPERTHREADING=${HYPERTHREADING##*=}
+if [[ $HYPERTHREADING -gt 1 ]]; then
+	printf "[ !! ] Hyperthreading support detected"
+
+	printf "
+	# Enable hyperthreading
+	# -----------------------
+	hw.smt=1" \
+	>> /etc/sysctl.conf
+
+	printf "[ OK ] Hyperthreading enabled.\n"
+	sleep 0.5
+else
+	printf "[ !! ] System does not support hyperthreading, skipping..."
+	sleep 0.5
+fi
+
 # update system
 # apply syspatch
 # update firmware
