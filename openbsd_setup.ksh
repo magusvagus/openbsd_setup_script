@@ -33,7 +33,7 @@ while [[ $TIMEOUT -ne 3 ]]; do
 		sleep 1
 		(( TIMEOUT++ ))
 
-		if [[ $TIMEOUT -eq 3 ]]; then
+		if [[ "$TIMEOUT" -eq 3 ]]; then
 			printf "[ !! ] Could not connect to network.\n"
 			TIMEOUT=0
 			break
@@ -46,7 +46,7 @@ done
 
 printf ">>> Wireless setup\n"
 sleep 1
-if [[ -z $WIFI ]]; then
+if [[ -z "$WIFI" ]]; then
 	printf "[ ER ] No WIFI detected\n"
 else
 	# extract interface name
@@ -58,7 +58,7 @@ else
 		printf ">>> Scan or connect to WIFI? [y/n/s]\n"
 		read ANSWER
 
-		if [[ $ANSWER = "y" ]]; then
+		if [[ "$ANSWER" = "y" ]]; then
 			printf ">>> Enter SSID: "
 			read SSID
 			printf ">>> Enter WPAKEY: "
@@ -73,7 +73,7 @@ else
 				printf "[ !! ] Can't reach network, retrying...\n"
 				sleep 1
 				(( TIMEOUT++ ))
-			if [[ $TIMEOUT -eq 3 ]]; then
+			if [[ "$TIMEOUT" -eq 3 ]]; then
 				printf "[ !! ] Could not connect to network.\n"
 				TIMEOUT=0
 			else
@@ -90,9 +90,9 @@ else
 				break
 			fi
 
-		elif [[ $ANSWER = "s" ]]; then
+		elif [[ "$ANSWER" = "s" ]]; then
 			ifconfig $WIFI scan | less
-		elif [[ $ANSWER = "n" ]]; then
+		elif [[ "$ANSWER" = "n" ]]; then
 			break
 		else
 			printf "[ ER ] Invalid input.\n"
@@ -113,13 +113,13 @@ printf ">>> Enable Single user password protection? [y/n] "
 sleep 1
 while true; do
 	read ANSWER
-	if [[ $ANSWER == 'y' ]]; then
+	if [[ "$ANSWER" == 'y' ]]; then
 		sed -e '1,/^.*secure.*$/s/secure/insecure/' /etc/ttys > /tmp/temp.txt; 
 		mv /tmp/temp.txt /etc/tty; 
 		rm /tmp/temp.txt;
 		printf "[ OK ] File /etc/ttys modified.\n"
 		break
-	elif [[ $ANSWER == 'n' ]]; then
+	elif [[ "$ANSWER" == 'n' ]]; then
 		break
 	else
 		printf "[ ER ] Invalid input.\n"
@@ -214,8 +214,8 @@ sleep 0.5
 HYPERTHREADING=$(sysctl hw.ncpu)
 # delete everything from output up to the number of threads
 HYPERTHREADING=${HYPERTHREADING##*=}
-if [[ $HYPERTHREADING -gt 1 ]]; then
-	printf "[ !! ] Hyperthreading support detected"
+if [[ "$HYPERTHREADING" -gt 1 ]]; then
+	printf "[ !! ] Hyperthreading support detected.\n"
 
 	printf "
 	# Enable hyperthreading
@@ -226,7 +226,7 @@ if [[ $HYPERTHREADING -gt 1 ]]; then
 	printf "[ OK ] Hyperthreading enabled.\n"
 	sleep 0.5
 else
-	printf "[ !! ] System does not support hyperthreading, skipping..."
+	printf "[ !! ] System does not support hyperthreading, skipping...\n"
 	sleep 0.5
 fi
 
