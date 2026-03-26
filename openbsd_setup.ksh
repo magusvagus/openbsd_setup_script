@@ -222,10 +222,10 @@ touch /etc/sysctl.conf
 printf "[ OK ] File /etc/sysctl.conf created.\n"
 sleep 0.5
 
-HYPERTHREADING=$(sysctl hw.ncpu)
+THREADS=$(sysctl hw.ncpu)
 # delete everything from output up to the number of threads
-HYPERTHREADING=${HYPERTHREADING##*=}
-if [[ "$HYPERTHREADING" -gt 1 ]]; then
+THREADS=${THREADS##*=}
+if [[ "$THREADS" -gt 1 ]]; then
 	printf "[ !! ] Hyperthreading support detected.\n"
 	sleep 0.5
 
@@ -299,6 +299,31 @@ kern.seminfo.semmni=2048\n\n" \
 
 printf "[ OK ] Semaphores set.\n"
 sleep 0.5
+
+if [[ $THREADS -ge 8]]; then
+	MAXPROC=32768
+elif [[ $THREADS -ge 4]]; then
+	MAXPROC=16384
+elif [[ $THREADS -ge 2]]; then
+	MAXPROC=8192
+fi
+
+printf "
+# system processes
+# ----------------
+# note: maxfiles and maxthread have to be set
+# accordingly when changing maxproc.
+
+# general rule:
+# maxfile = (4 to 8) x maxproc
+# as each process can open multiple files
+# maxthread = (2 x maxproc)
+# as browsers and other programs create many threads
+
+# number of allowed processes
+kern.maxproc=%d\n\n" "$MAXPROC" \
+>> /etc/sysctl.conf
+
 
 # update system
 # apply syspatch
