@@ -216,11 +216,12 @@ HYPERTHREADING=$(sysctl hw.ncpu)
 HYPERTHREADING=${HYPERTHREADING##*=}
 if [[ "$HYPERTHREADING" -gt 1 ]]; then
 	printf "[ !! ] Hyperthreading support detected.\n"
+	sleep 0.5
 
 	printf "
 	# Enable hyperthreading
-	# -----------------------
-	hw.smt=1" \
+	# ---------------------
+	hw.smt=1\n\n" \
 	>> /etc/sysctl.conf
 
 	printf "[ OK ] Hyperthreading enabled.\n"
@@ -230,8 +231,41 @@ else
 	sleep 0.5
 fi
 
+RAM=$(dmesg | grep mem | awk '{print $4}' | head -n 1)
+MB=1048576
+GB=1073741824
+GB2=2147483648
+
+if [[ "$RAM" -ge "$GB" ]]; then
+	printf "[ !! ] Available memory: %d GB" "$(( $RAM / 1024 / 1024 / 1024 ))"
+	sleep 0.5
+elif [[ "$RAM" -ge "$MB" ]]; then
+	printf "[ !! ] Available memory: %d MB" "$(( $RAM / 1024 / 1024 ))"
+	sleep 0.5
+fi
+
+SHMALL=$(( $RAM / 4096 ))
+
+if [[ "$RAM" -gt "$GB2" ]]; then
+	SHMMAX=$GB2
+	SHMMNI=2048
+else
+	SHMMAX=$(( $RAM / 2 ))
+	SHMMNI=4096
+fi
+
+printf "
+# Shared memory limits
+# --------------------
+kern.shminfo.shmall=%d
+kern.shminfo.shmmax=%d
+kern.shminfo.shmmni=%d\n\n" "$SHMALL" "$SHMMAX" "$SHMMNI" \
+>> /etc/sysctl.conf
+
+printf "[ OK ] Shared memory limits set.\n"
+sleep 0.5
+
 # update system
 # apply syspatch
 # update firmware
-# installing programs
 # afterboot setup
