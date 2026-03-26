@@ -21,6 +21,7 @@ if [[ "$(id -u)" -ne 0 ]]; then
 	exit 1;
 else
 	printf "[ OK ] You are root\n";
+	sleep 0.5
 fi
 
 printf ">>> Testing network connection.\n"
@@ -30,16 +31,18 @@ while [[ $TIMEOUT -ne 3 ]]; do
 	ping -c 3 -W 1 9.9.9.9 >/dev/null 2>&1
 	if [[ $? -eq 0 ]]; then
 		printf "[ !! ] Can't reach network, retrying...\n"
-		sleep 1
+		sleep 0.5
 		(( TIMEOUT++ ))
 
 		if [[ "$TIMEOUT" -eq 3 ]]; then
 			printf "[ !! ] Could not connect to network.\n"
+			sleep 0.5
 			TIMEOUT=0
 			break
 		fi
 	else
 		printf "[ OK ] You are online.\n"
+		sleep 0.5
 		break
 	fi
 done
@@ -48,10 +51,12 @@ printf ">>> Wireless setup\n"
 sleep 1
 if [[ -z "$WIFI" ]]; then
 	printf "[ ER ] No WIFI detected\n"
+	sleep 0.5
 else
 	# extract interface name
 	WIFI=$(echo "$WIFI" | awk '{print $1}')
 	printf "[ OK ] WIFI detected, interface: %s, $WIFI\n"
+	sleep 0.5
 
 	LOOP='true'
 	while [[ $LOOP == 'true' ]]; do
@@ -64,28 +69,30 @@ else
 			printf ">>> Enter WPAKEY: "
 			read WPAKEY
 			ifconfig join $SSID wpakey $WPAKEY lladdr random
-			printf ">>> Connecting...\n"
-			sleep 1
+			printf "[ !! ] Connecting...\n"
+			sleep 0.5
 			sh /etc/netstart $WIFI
 
 			# test connection
 			if ping -c 3 9.9.9.9 > /dev/null 2>&1; then
 				printf "[ !! ] Can't reach network, retrying...\n"
-				sleep 1
+				sleep 0.5
 				(( TIMEOUT++ ))
 			if [[ "$TIMEOUT" -eq 3 ]]; then
 				printf "[ !! ] Could not connect to network.\n"
+				sleep 0.5
 				TIMEOUT=0
 			else
 				# create hostname file
 				printf "[ OK ] You are online.\n"
+				sleep 0.5
 
 				printf ">>> Creating hostname file\n"
 				sleep 1
 				touch /etc/hostname.${WIFI}
 				printf "ifconfig join \"%s\" wpakey \"%s\" lladdr random" "$SSID" "$WPAKEY\ndhcp" >> /etc/hostname.${WIFI}
 				printf "[ OK ] hostfile.%s created.\n" "$WIFI"
-				sleep 1
+				sleep 0.5
 
 				break
 			fi
@@ -96,6 +103,7 @@ else
 			break
 		else
 			printf "[ ER ] Invalid input.\n"
+			sleep 0.5
 		fi
 	done
 fi
@@ -106,6 +114,7 @@ for ETH in "${ETH[@]}"; do
 	if [[ -e "/etc/hostname.$ETH" ]]; then
 		printf "inet autoconf lladdr rendom" > "/etc/hostname.$ETH"
 		printf "[ OK ] File /etc/hostname.%s modified\n" "$ETH"
+		sleep 0.5
 	fi
 done
 
@@ -118,11 +127,13 @@ while true; do
 		mv /tmp/temp.txt /etc/tty; 
 		rm /tmp/temp.txt;
 		printf "[ OK ] File /etc/ttys modified.\n"
+		sleep 0.5
 		break
 	elif [[ "$ANSWER" == 'n' ]]; then
 		break
 	else
 		printf "[ ER ] Invalid input.\n"
+		sleep 0.5
 	fi
 done
 
@@ -176,7 +187,7 @@ pkg_add	\
 	py3-python-lsp-server-1.12.2	\ 
 
 printf "[ OK ] Installation complete.\n"
-sleep 1
+sleep 0.5
 	
 printf ">>> Setting up doas\n"
 sleep 1
@@ -185,7 +196,7 @@ chown root:wheel /etc/doas.conf
 chmod 0400 /etc/doas.conf
 
 printf "[ OK ] File /etc/doas.conf created.\n"
-sleep 1
+sleep 0.5
 
 printf "
 permit persist keepenv :wheel
@@ -202,7 +213,7 @@ permit nopass %s as root cmd wsconsctl args display.brightness=" "$USER" "$USER"
 > /etc/doas.conf
 
 printf "[ OK ] File /etc/doas.conf modified.\n"
-sleep 1
+sleep 0.5
 
 printf ">>> Setting up Kernel options.\n"
 sleep 1
