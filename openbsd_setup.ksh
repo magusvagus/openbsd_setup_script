@@ -273,7 +273,31 @@ kern.shminfo.shmmax=%d
 kern.shminfo.shmmni=%d\n\n" "$SHMALL" "$SHMMAX" "$SHMMNI" \
 >> /etc/sysctl.conf
 
+printf "
+# semaphores
+# ----------
+# Maximum number of shared memory segments per process
+# (default often 128–512). Limits how many distinct shared
+# memory regions a single process can attach to.
+
+# Shared memory segement per process
+kern.shminfo.shmseg=1024\n\n" \
+>> /etc/sysctl.conf
+
 printf "[ OK ] Shared memory limits set.\n"
+sleep 0.5
+
+printf "
+# maximum number of system V semapthores system-wide
+# increase together 'semmmni' (1:2 ratio)
+#default 60
+kern.seminfo.semmns=4096
+
+# Maximum number ofshared memory identifiers in system
+kern.seminfo.semmni=2048\n\n" \
+>> /etc/sysctl.conf
+
+printf "[ OK ] Semaphores set.\n"
 sleep 0.5
 
 # update system
