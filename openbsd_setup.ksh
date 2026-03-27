@@ -102,7 +102,7 @@ else
 				printf "[ !! ] Can't reach network, retrying...\n"
 				sleep 0.5
 				(( TIMEOUT++ ))
-			if [[ "$TIMEOUT" -eq 3 ]]; then
+			elif [[ "$TIMEOUT" -eq 3 ]]; then
 				printf "[ !! ] Could not connect to network.\n"
 				sleep 0.5
 				TIMEOUT=0
