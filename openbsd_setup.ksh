@@ -164,7 +164,7 @@ done
 printf ">>> Installing packages.\n"
 sleep 1
 
-set -A PACKETS\
+set -A PACKAGES\
 	"vim-9.1.1706-gtk3"\
 	"wget-1.25.0p0"\
 	"curl-8.16.0"\
@@ -213,7 +213,7 @@ set -A PACKETS\
 
 # create list equal to number of packets
 set -A SELECT
-while [[ "$INDEX" -lt "${#PACKETS[@]}" ]]; do
+while [[ "$INDEX" -lt "${#PACKAGES[@]}" ]]; do
 	SELECT[$INDEX]="false"
 	((INDEX++))
 done
@@ -225,7 +225,7 @@ function printl
 
 	_index=0
 
-	for PAK in "${PACKETS[@]}"; do
+	for PAK in "${PACKAGES[@]}"; do
 		if [[ "${SELECT[$_index]}" == "false" ]]; then
 			BOX=" "
 		else
@@ -247,7 +247,7 @@ printl
 
 while true; do
 	# change quit to skip
-	printf ">>> Installing packages [Choose 1-%d], [a]ll, [s]kip, [i]install: " "${#PACKETS[@]}"
+	printf ">>> Installing packages [Choose 1-%d], [a]ll, [s]kip, [i]install: " "${#PACKAGES[@]}"
 	read ANSWER
 	if [[ "$ANSWER" == "p" ]]; then
 		printl
@@ -258,7 +258,7 @@ while true; do
 	elif [[ "$ANSWER" == "i" ]]; then
 		for SEL in "${SELECT[@]}"; do
 			if [[ $SEL == "true" ]]; then
-				pkg_add ${PACKETS[$INDEX]}
+				pkg_add ${PACKAGES[$INDEX]}
 				((INDEX++))
 				printf "\n"
 			else
@@ -289,7 +289,7 @@ while true; do
 	# check if input is an integer
 	elif case $ANSWER in *[!0-9]*) false;; *) true;; esac; then
 		# check if number input is in rane
-		if [[ "$ANSWER" -le "${#PACKETS[@]}" && "$ANSWER" -ge 1 ]]; then
+		if [[ "$ANSWER" -le "${#PACKAGES[@]}" && "$ANSWER" -ge 1 ]]; then
 			ANSWER=$(( $ANSWER - 1 ))
 
 			# turn on or off
