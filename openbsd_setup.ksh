@@ -253,7 +253,9 @@ while true; do
 		printl
 
 	elif [[ "$ANSWER" == "s" ]]; then
-		exit 0;
+		sleep "[ !! ] Skipping..."
+		sleep 0.5
+		break
 
 	elif [[ "$ANSWER" == "i" ]]; then
 		for SEL in "${SELECT[@]}"; do
@@ -266,6 +268,23 @@ while true; do
 			fi
 		done
 		INDEX=0
+
+		# check if selection wasnt empty
+		CHECK="false"
+		for SEL in "${SELECT[@]}"; do
+			if [[ "$SEL" == "true" ]]; then
+				CHECK="true"
+			fi
+		done
+
+		if [[ "$CHECK" == "true" ]]; then
+			printf "[ OK ] Installation finished."
+			break
+		else
+			print "[ ER ] No Packages chosen."
+		fi
+
+
 
 	elif [[ "$ANSWER" == "a" ]]; then
 		if [[ $ALL == "true" ]]; then
