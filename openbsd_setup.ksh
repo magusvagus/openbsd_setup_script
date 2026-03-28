@@ -302,11 +302,11 @@ while true; do
 			fi
 
 		else	
-			printf "Invalid input.\n"
+			printf "[ ER ] Invalid input.\n"
 		fi
 
 	else
-		printf "Invalid input.\n"
+		printf "[ ER ] Invalid input.\n"
 	fi
 
 	INDEX=0
