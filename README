@@ -1,12 +1,21 @@
+
 OpenBSD setup script
 
-This script sets up the OpenBSD system for personal use.
+This script sets a newly installed OpenBSD system up for daily desktop use,
+including following options:
 
-- Network
+- WIFI Network
+- MAC Randomizations
+- Singe user mode password protection
 - Hostname
-- Installs tools
-- Starts and sets up deamons
-- downloads and installs dotfiles repo
-- reboots into full desktop enviroment
+- doas setup
+- Kernel options
+	- Hyperthreading
+	- Semaphores
+	- Shared memory limits
+	- system processes
+- Installing packages
+- Deamon setup
+- downloading and installng dotfiles repo
 
 WORK IN PROGRESS
