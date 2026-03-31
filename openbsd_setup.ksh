@@ -446,12 +446,19 @@ kern.seminfo.semmni=2048\n\n" \
 printf "[ OK ] Semaphores set.\n"
 sleep 0.5
 
+# adjust to number of available threads
 if [[ $THREADS -ge 8]]; then
 	MAXPROC=32768
+	MAXFILES=$(( $MAXPROC * 8 ))
+	MAXTHREAD=$(( $MAXPROC * 2 ))
 elif [[ $THREADS -ge 4]]; then
 	MAXPROC=16384
+	MAXFILES=$(( $MAXPROC * 6 ))
+	MAXTHREAD=$(( $MAXPROC * 2 ))
 elif [[ $THREADS -ge 2]]; then
 	MAXPROC=8192
+	MAXFILES=$(( $MAXPROC * 4 ))
+	MAXTHREAD=$(( $MAXPROC * 2 ))
 fi
 
 printf "
@@ -467,8 +474,19 @@ printf "
 # as browsers and other programs create many threads
 
 # number of allowed processes
-kern.maxproc=%d\n\n" "$MAXPROC" \
+kern.maxproc=%d
+
+# number of maximum files
+kern.maxfiles=%d
+kern.maxfilesperproc=%d
+kern.maxvnodes=%d
+
+# number of maximum threads
+kern.maxthread=%d\n\n" "$MAXPROC" "$MAXFILES" "$MAXFILES" "$MAXFILES" "$MAXTHREAD" \
 >> /etc/sysctl.conf
+
+printf "[ OK ] System processes set.\n"
+sleep 0.5
 
 
 # update system
