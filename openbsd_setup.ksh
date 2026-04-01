@@ -48,6 +48,7 @@ else
 	sleep 0.5
 fi
 
+# network connection
 printf ">>> Testing network connection.\n"
 sleep 1
 while [[ $TIMEOUT -ne 3 ]]; do
@@ -71,6 +72,7 @@ while [[ $TIMEOUT -ne 3 ]]; do
 	fi
 done
 
+# wireless setup
 printf ">>> Wireless setup\n"
 sleep 1
 if [[ -z "$WIFI" ]]; then
@@ -132,6 +134,7 @@ else
 	done
 fi
 
+# enabling mac randomization
 printf ">>> Setting up MAC randomization\n"
 sleep 1
 for ETH in "${ETH[@]}"; do
@@ -142,6 +145,7 @@ for ETH in "${ETH[@]}"; do
 	fi
 done
 
+# enable single user mode password protection
 printf ">>> Enable Single user password protection? [y/n] "
 sleep 1
 while true; do
@@ -161,6 +165,7 @@ while true; do
 	fi
 done
 
+# installing packages
 printf ">>> Installing packages.\n"
 sleep 1
 
@@ -335,6 +340,7 @@ done
 printf "[ OK ] Installation complete.\n"
 sleep 0.5
 	
+# doas setup
 printf ">>> Setting up doas\n"
 sleep 1
 touch /etc/doas.conf
