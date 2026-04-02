@@ -39,7 +39,11 @@ function printl
 	printf "\n"
 }
 
-#test for root
+
+# #############
+# CHEK FOR ROOT
+# #############
+
 if [[ "$(id -u)" -ne 0 ]]; then
 	printf "[ ER ] Scrip must be run as root!\n";
 	exit 1;
@@ -48,7 +52,11 @@ else
 	sleep 0.5
 fi
 
-# network connection
+
+# ##################
+# NETWORK CONNECTION
+# ##################
+
 printf ">>> Testing network connection.\n"
 sleep 1
 while [[ $TIMEOUT -ne 3 ]]; do
@@ -72,7 +80,11 @@ while [[ $TIMEOUT -ne 3 ]]; do
 	fi
 done
 
-# wireless setup
+
+# ##############
+# WIRELESS SETUP
+# ##############
+
 printf ">>> Wireless setup\n"
 sleep 1
 if [[ -z "$WIFI" ]]; then
@@ -134,7 +146,11 @@ else
 	done
 fi
 
-# enabling mac randomization
+
+# #################
+# MAC RANDOMIZATION
+# #################
+
 printf ">>> Setting up MAC randomization\n"
 sleep 1
 for ETH in "${ETH[@]}"; do
@@ -145,7 +161,10 @@ for ETH in "${ETH[@]}"; do
 	fi
 done
 
-# enable single user mode password protection
+# #########################
+# SINGLE USER MODE PASSWORD 
+# #########################
+
 printf ">>> Enable Single user password protection? [y/n] "
 sleep 1
 while true; do
@@ -165,7 +184,11 @@ while true; do
 	fi
 done
 
-# installing packages
+
+# ###################
+# INSTALLING PACKAGES
+# ###################
+
 printf ">>> Installing packages.\n"
 sleep 1
 
@@ -339,8 +362,12 @@ done
 
 printf "[ OK ] Installation complete.\n"
 sleep 0.5
-	
-# doas setup
+
+
+# ##########
+# DOAS SETUP
+# ##########
+
 printf ">>> Setting up doas\n"
 sleep 1
 touch /etc/doas.conf
@@ -366,6 +393,11 @@ permit nopass %s as root cmd wsconsctl args display.brightness=" "$USER" "$USER"
 
 printf "[ OK ] File /etc/doas.conf modified.\n"
 sleep 0.5
+
+
+# ##############
+# KERNEL OPTIONS
+# ##############
 
 printf ">>> Setting up Kernel options.\n"
 sleep 1
