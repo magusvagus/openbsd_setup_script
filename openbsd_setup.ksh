@@ -15,6 +15,8 @@ set -A ETH	\
 	"vr0"	\
 	"xl0"	\
 
+
+# print marked package list
 function printl
 {
 	typeset _index
@@ -30,10 +32,10 @@ function printl
 
 		((_index++))
 		if [[ $(( $_index % 2 )) -eq 0 ]];then
-			printf "[%s] %2d. %-13s" "$BOX" "$_index" "$PAK"
+			printf "[%s] %2d. %-25s" "$BOX" "$_index" "${PAK%-*}"
 			printf "\n"
 		else
-			printf "[%s] %2d. %-13s" "$BOX" "$_index" "$PAK"
+			printf "[%s] %2d. %-25s" "$BOX" "$_index" "${PAK%-*}"
 		fi
 	done
 	printf "\n"
@@ -246,30 +248,6 @@ while [[ "$INDEX" -lt "${#PACKAGES[@]}" ]]; do
 	((INDEX++))
 done
 INDEX=0
-
-function printl
-{
-	typeset _index
-
-	_index=0
-
-	for PAK in "${PACKAGES[@]}"; do
-		if [[ "${SELECT[$_index]}" == "false" ]]; then
-			BOX=" "
-		else
-			BOX="X"
-		fi
-
-		((_index++))
-		if [[ $(( $_index % 2 )) -eq 0 ]];then
-			printf "[%s] %2d. %-25s" "$BOX" "$_index" "${PAK%-*}"
-			printf "\n"
-		else
-			printf "[%s] %2d. %-25s" "$BOX" "$_index" "${PAK%-*}"
-		fi
-	done
-	printf "\n"
-}
 
 printl
 
