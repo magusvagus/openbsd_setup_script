@@ -504,6 +504,30 @@ kern.maxthread=%d\n\n" "$MAXPROC" "$MAXFILES" "$MAXFILES" "$MAXFILES" "$MAXTHREA
 printf "[ OK ] System processes set.\n"
 sleep 0.5
 
+# set based on available RAM
+if [[ "$RAM" -gt "$(( $GB2 * 16 ))" ]]; then
+	BUFFERCACHE=90
+elif [[ "$RAM" -gt "$(( $GB2 * 8 ))" ]]; then
+	BUFFERCACHE=70
+elif [[ "$RAM" -gt "$(( $GB2 * 4 ))" ]]; then
+	BUFFERCACHE=60
+elif [[ "$RAM" -gt "$GB2" ]]; then
+	BUFFERCACHE=40
+else
+	BUFFERCACHE=10
+fi
+
+printf "
+# Buffer cache
+# ------------
+# percentage of physical memory used for the buffer cache
+# (typical range 10% - 90%)
+
+	kern.bufcachepercent=%d\n\n" "$BUFFERCACHE" \
+>> /etc/sysctl.conf
+
+printf "[ OK ] Buffer cache set.\n"
+sleep 0.5
 
 # update system
 # apply syspatch
