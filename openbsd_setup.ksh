@@ -558,6 +558,7 @@ sleep 0.5
 # intro screen
 # create seperate options Laptop/Desktop/Server use
 # add each setup step to a function
+# update package list
 # update system
 # apply syspatch
 # update firmware
