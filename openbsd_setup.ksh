@@ -529,6 +529,30 @@ printf "
 printf "[ OK ] Buffer cache set.\n"
 sleep 0.5
 
+
+# For servers
+# kern.maxvnodes=262144
+# printf "[ OK ] Number of vnodes set.\n"
+# sleep 0.5
+
+#kern.somaxconn=1024
+# printf "[ OK ] TCP listen queue depth set.\n"
+# sleep 0.5
+
+
+# ################
+# POWER MANAGEMENT
+# ################
+
+printf ">>> Power management setup.\n"
+sleep 1
+
+rcctl enable apmd
+rcctl set apmd flags -A
+rcctl start apmd
+
+# FUNCTIONS TO IMPLEMENT
+# create seperate options Laptop/Desktop/Server use
 # update system
 # apply syspatch
 # update firmware
