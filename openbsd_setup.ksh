@@ -551,8 +551,13 @@ rcctl enable apmd
 rcctl set apmd flags -A
 rcctl start apmd
 
-# FUNCTIONS TO IMPLEMENT
+printf "[ OK ] Power management set.\n"
+sleep 0.5
+
+# TODO
+# intro screen
 # create seperate options Laptop/Desktop/Server use
+# add each setup step to a function
 # update system
 # apply syspatch
 # update firmware
