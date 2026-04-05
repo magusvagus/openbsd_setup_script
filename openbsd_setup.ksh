@@ -284,10 +284,10 @@ while true; do
 		done
 
 		if [[ "$CHECK" == "true" ]]; then
-			printf "[ OK ] Installation finished."
+			printf "[ OK ] Installation finished.\n"
 			break
 		else
-			print "[ ER ] No Packages chosen."
+			print "[ ER ] No Packages chosen.\n"
 		fi
 
 
@@ -410,10 +410,10 @@ GB=1073741824
 GB2=2147483648
 
 if [[ "$RAM" -ge "$GB" ]]; then
-	printf "[ !! ] Available memory: %d GB" "$(( $RAM / 1024 / 1024 / 1024 ))"
+	printf "[ !! ] Available memory: %d GB\n" "$(( $RAM / 1024 / 1024 / 1024 ))"
 	sleep 0.5
 elif [[ "$RAM" -ge "$MB" ]]; then
-	printf "[ !! ] Available memory: %d MB" "$(( $RAM / 1024 / 1024 ))"
+	printf "[ !! ] Available memory: %d MB\n" "$(( $RAM / 1024 / 1024 ))"
 	sleep 0.5
 fi
 
@@ -463,15 +463,15 @@ printf "[ OK ] Semaphores set.\n"
 sleep 0.5
 
 # adjust to number of available threads
-if [[ $THREADS -ge 8]]; then
+if [[ $THREADS -ge 8 ]]; then
 	MAXPROC=32768
 	MAXFILES=$(( $MAXPROC * 8 ))
 	MAXTHREAD=$(( $MAXPROC * 2 ))
-elif [[ $THREADS -ge 4]]; then
+elif [[ $THREADS -ge 4 ]]; then
 	MAXPROC=16384
 	MAXFILES=$(( $MAXPROC * 6 ))
 	MAXTHREAD=$(( $MAXPROC * 2 ))
-elif [[ $THREADS -ge 2]]; then
+elif [[ $THREADS -ge 2 ]]; then
 	MAXPROC=8192
 	MAXFILES=$(( $MAXPROC * 4 ))
 	MAXTHREAD=$(( $MAXPROC * 2 ))
