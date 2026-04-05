@@ -554,6 +554,66 @@ rcctl start apmd
 printf "[ OK ] Power management set.\n"
 sleep 0.5
 
+# ###########
+# STAFF GROUP
+# ###########
+
+printf ">>> Setting up 'staff' group .\n"
+sleep 1
+
+# TODO add additional step to check for file
+
+# Define replacements as an array w/ hooks
+# currently preset based on personal setup
+set -A STAFF \
+    "        :datasize-cur=1536M:\\\\ #next1" \
+    "        :datasize-max=infinity:\\\\ #next2" \
+    "        :maxproc-cur=512:\\\\ #next3" \
+    "        :maxproc-max=1024:\\\\ #next4" \
+    "        :openfiles-cur=4096:\\\\ #next5" \
+    "        :openfiles-max=8192:\\\\ #next6" \
+    "        :stacksize-cur=32M:\\\\ #next7" \
+    "        :ignorenologin:\\\\ #next8" \
+    "        :requirehome@:\\\\ #next9" \
+    "        :tc=default@:\\\\"
+
+start="staff:"
+INDEX=0
+
+# First replacement after "staff:"
+replacement="${STAFF[$INDEX]}"
+
+# Use printf to safely insert literal string with newlines
+sed -i.bak "/$start/ {
+	n
+    c\\
+$replacement
+}" /etc/login.conf
+
+((INDEX++))
+
+# Loop through remaining replacements
+for i in "#next1" "#next2" "#next3" "#next4" "#next5" "#next6" "#next7" "#next8" "#next9"; do
+    replacement="${STAFF[$INDEX]}"
+    sed -i.bak "/$i/ {
+        n
+        c\\
+$replacement
+    }" /etc/login.conf
+    ((INDEX++))
+done   
+
+# remove all #next comments
+for next in "#next1" "#next2" "#next3" "#next4" "#next5" "#next6" "#next7" "#next8" "#next9"; do
+    replacement=" "
+    sed -i "s/$next/$replacement/g" /etc/login.conf
+done   
+
+INDEX=0
+
+printf "[ OK ] File /etc/login.conf modified.\n"
+sleep 0.5
+
 # TODO
 # intro screen
 # create seperate options Laptop/Desktop/Server use
