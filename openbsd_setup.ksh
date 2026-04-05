@@ -520,7 +520,7 @@ printf "
 # Buffer cache
 # ------------
 # percentage of physical memory used for the buffer cache
-# (typical range 10% - 90%)
+# (typical range 10% - 90%%)
 
 	kern.bufcachepercent=%d\n\n" "$BUFFERCACHE" \
 >> /etc/sysctl.conf
