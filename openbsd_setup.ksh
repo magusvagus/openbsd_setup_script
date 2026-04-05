@@ -174,7 +174,6 @@ while true; do
 	if [[ "$ANSWER" == 'y' ]]; then
 		sed -e '1,/^.*secure.*$/s/secure/insecure/' /etc/ttys > /tmp/temp.txt; 
 		mv /tmp/temp.txt /etc/tty; 
-		rm /tmp/temp.txt;
 		printf "[ OK ] File /etc/ttys modified.\n"
 		sleep 0.5
 		break
