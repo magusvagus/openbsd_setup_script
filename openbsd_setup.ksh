@@ -557,11 +557,12 @@ rcctl start apmd
 printf "[ OK ] Power management set.\n"
 sleep 0.5
 
+
 # ###########
 # STAFF GROUP
 # ###########
 
-printf ">>> Setting up 'staff' group .\n"
+printf ">>> Setting up 'staff' group limits.\n"
 sleep 1
 
 # TODO add additional step to check for file
@@ -617,7 +618,14 @@ INDEX=0
 printf "[ OK ] File /etc/login.conf modified.\n"
 sleep 0.5
 
+# check for systems without users
+usermod -G staff $usr
+
+printf "[ OK ] %s added to staff group.\n" "$usr"
+sleep 0.5
+
 # TODO
+# add ports tree download
 # fix semaphores
 # if files not present, check and create.
 # intro screen
