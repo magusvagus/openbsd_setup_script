@@ -258,7 +258,7 @@ while true; do
 		printl
 
 	elif [[ "$ANSWER" == "s" ]]; then
-		sleep "[ !! ] Skipping..."
+		printf "[ !! ] Skipping..."
 		sleep 0.5
 		break
 
@@ -394,7 +394,7 @@ if [[ "$THREADS" -gt 1 ]]; then
 	# Enable hyperthreading
 	# ---------------------
 	hw.smt=1\n\n" \
-	>> /etc/sysctl.conf
+	> /etc/sysctl.conf
 
 	printf "[ OK ] Hyperthreading enabled.\n"
 	sleep 0.5
@@ -438,7 +438,7 @@ printf "
 # semaphores
 # ----------
 # Maximum number of shared memory segments per process
-# (default often 128–512). Limits how many distinct shared
+# (default often 128\–512). Limits how many distinct shared
 # memory regions a single process can attach to.
 
 # Shared memory segement per process
@@ -474,6 +474,10 @@ elif [[ $THREADS -ge 2 ]]; then
 	MAXPROC=8192
 	MAXFILES=$(( $MAXPROC * 4 ))
 	MAXTHREAD=$(( $MAXPROC * 2 ))
+elif [[ $THREADS -eq 1 ]]; then
+	MAXPROC=2048
+	MAXFILES=$(( $MAXPROC * 2 ))
+	MAXTHREAD=$(( $MAXPROC * 1 ))
 fi
 
 printf "
@@ -614,6 +618,8 @@ printf "[ OK ] File /etc/login.conf modified.\n"
 sleep 0.5
 
 # TODO
+# fix semaphores
+# if files not present, check and create.
 # intro screen
 # create seperate options Laptop/Desktop/Server use
 # add each setup step to a function
