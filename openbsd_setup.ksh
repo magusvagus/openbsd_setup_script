@@ -569,49 +569,51 @@ sleep 1
 
 # Define replacements as an array w/ hooks
 # currently preset based on personal setup
-set -A STAFF \
-    "        :datasize-cur=1536M:\\\\ #next1" \
-    "        :datasize-max=infinity:\\\\ #next2" \
-    "        :maxproc-cur=512:\\\\ #next3" \
-    "        :maxproc-max=1024:\\\\ #next4" \
-    "        :openfiles-cur=4096:\\\\ #next5" \
-    "        :openfiles-max=8192:\\\\ #next6" \
-    "        :stacksize-cur=32M:\\\\ #next7" \
-    "        :ignorenologin:\\\\ #next8" \
-    "        :requirehome@:\\\\ #next9" \
-    "        :tc=default@:\\\\"
+set -A STAFF\
+	":datasize-cur="\
+	":datasize-max="\
+	":maxproc-max="\
+	":openfiles-cur="\
+	":openfiles-max="\
+	":stacksize-cur="\
+	":maxproc-cur="\
+	":ignorenologin"\
+	":requirehome"\
+	":tc="\
 
-start="staff:"
+set -A VAR\
+	"1536M"\
+	"infinity"\
+	"8192"\
+	"4096"\
+	"8192"\
+	"32M"\
+	"32M"\
+	""\
+	"@"\
+	"default"\
+
+file="/etc/login.conf"
+tmpfile="/tmp/obsd_setup.tmp"
 INDEX=0
 
-# First replacement after "staff:"
-replacement="${STAFF[$INDEX]}"
+line_num=$(grep -n 'staff:' $file)
+line_num=$(printf "%s" "$line_num" | awk -F: '{print $1}')
 
-# Use printf to safely insert literal string with newlines
-sed -i.bak "/$start/ {
-	n
-    c\\
-$replacement
-}" /etc/login.conf
+target_line=$line_num
+current_line=0
 
-((INDEX++))
-
-# Loop through remaining replacements
-for i in "#next1" "#next2" "#next3" "#next4" "#next5" "#next6" "#next7" "#next8" "#next9"; do
-    replacement="${STAFF[$INDEX]}"
-    sed -i.bak "/$i/ {
-        n
-        c\\
-$replacement
-    }" /etc/login.conf
-    ((INDEX++))
-done   
-
-# remove all #next comments
-for next in "#next1" "#next2" "#next3" "#next4" "#next5" "#next6" "#next7" "#next8" "#next9"; do
-    replacement=" "
-    sed -i "s/$next/$replacement/g" /etc/login.conf
-done   
+while IFS= read -r line; do
+    current_line=$((current_line + 1))
+	if [[ "$index" -lt "${#LIST[@]}" ]]; then
+		if [ $current_line -gt $target_line ]; then
+			printf '\t%s%s:\\\n' "${LIST[$index]}" "${VAR[$index]}"
+		((INDEX++))
+		else
+			printf '%s\n' "$line"
+		fi
+	fi
+done < "$file" > "$tmpfile" && mv "$tmpfile" "$file"   
 
 INDEX=0
 
