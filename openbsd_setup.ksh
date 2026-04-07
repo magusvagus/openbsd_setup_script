@@ -610,7 +610,7 @@ while IFS= read -r line; do
 	else
 		if [ $current_line -eq $((target_line + 1)) ]; then
 			# Insert the new staff class lines
-			for i in "${!STAFF[@]}"; do
+			for i in "${STAFF[@]}"; do
 				printf '\t%s%s:\\\n' "${STAFF[$i]}" "${VAR[$i]}"
 			done
 		fi
