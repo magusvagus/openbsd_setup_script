@@ -565,6 +565,12 @@ sleep 0.5
 printf ">>> Setting up 'staff' group limits.\n"
 sleep 1
 
+# get created user 
+usr=$(getent passwd | awk -F: '$3 >= 1000 && $7 != "/sbin/nologin" { print $1 }')
+if [ -z "${usr}" ]; then
+    print "no user detected"
+fi   
+
 # TODO add additional step to check for file
 
 # Define replacements as an array w/ hooks
