@@ -594,7 +594,7 @@ set -A VAR\
 	"default"\
 
 file="/etc/login.conf"
-tmpfile="/tmp/obsd_setup.tmp"
+tmpfile="/tmp/obsd_setup."
 INDEX=0
 
 line_num=$(grep -n 'staff:' $file)
@@ -605,9 +605,9 @@ current_line=0
 
 while IFS= read -r line; do
     current_line=$((current_line + 1))
-	if [[ "$index" -lt "${#LIST[@]}" ]]; then
+	if [[ "$INDEX" -lt "${#LIST[@]}" ]]; then
 		if [ $current_line -gt $target_line ]; then
-			printf '\t%s%s:\\\n' "${LIST[$index]}" "${VAR[$index]}"
+			printf '\t%s%s:\\\n' "${LIST[$INDEX]}" "${VAR[$index]}"
 		((INDEX++))
 		else
 			printf '%s\n' "$line"
