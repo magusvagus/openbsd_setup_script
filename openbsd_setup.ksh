@@ -258,7 +258,7 @@ while true; do
 		printl
 
 	elif [[ "$ANSWER" == "s" ]]; then
-		printf "[ !! ] Skipping..."
+		printf "[ !! ] Skipping...\n"
 		sleep 0.5
 		break
 
@@ -605,13 +605,17 @@ current_line=0
 
 while IFS= read -r line; do
     current_line=$((current_line + 1))
-	if [[ "$INDEX" -lt "${#STAFF[@]}" ]]; then
-		if [ $current_line -gt $target_line ]; then
-			printf '\t%s%s:\\\n' "${STAFF[$INDEX]}" "${VAR[$INDEX]}"
-		((INDEX++))
-		else
-			printf '%s\n' "$line"
+	if [ $current_line -le $target_line ]; then
+		printf '%s\n' "$line"
+	else
+		if [ $current_line -eq $((target_line + 1)) ]; then
+			# Insert the new staff class lines
+			for i in "${!STAFF[@]}"; do
+				printf '\t%s%s:\\\n' "${STAFF[$i]}" "${VAR[$i]}"
+			done
 		fi
+		# Print the current line from the original file
+		printf '%s\n' "$line"
 	fi
 done < "$file" > "$tmpfile" && mv "$tmpfile" "$file"   
 
