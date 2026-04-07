@@ -603,6 +603,7 @@ line_num=$(printf "%s" "$line_num" | awk -F: '{print $1}')
 target_line=$line_num
 current_line=0
 
+i=0
 while IFS= read -r line; do
     current_line=$((current_line + 1))
 	if [[ $current_line -le $target_line ]]; then
@@ -610,8 +611,9 @@ while IFS= read -r line; do
 	else
 		if [[ $current_line -eq $((target_line + 1)) ]]; then
 			# Insert the new staff class lines
-			for i in "${STAFF[@]}"; do
+			while $i -le "${#STAFF[@]}"; do
 				printf "\t%s%s:\\\n" "${STAFF[$i]}" "${VAR[$i]}"
+				((i++))
 			done
 		fi
 		# Print the current line from the original file
