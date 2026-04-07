@@ -438,7 +438,7 @@ printf "
 # semaphores
 # ----------
 # Maximum number of shared memory segments per process
-# (default often 128\–512). Limits how many distinct shared
+# (default often 128–512). Limits how many distinct shared
 # memory regions a single process can attach to.
 
 # Shared memory segement per process
@@ -605,9 +605,9 @@ current_line=0
 
 while IFS= read -r line; do
     current_line=$((current_line + 1))
-	if [[ "$INDEX" -lt "${#LIST[@]}" ]]; then
+	if [[ "$INDEX" -lt "${#STAFF[@]}" ]]; then
 		if [ $current_line -gt $target_line ]; then
-			printf '\t%s%s:\\\n' "${LIST[$INDEX]}" "${VAR[$index]}"
+			printf '\t%s%s:\\\n' "${STAFF[$INDEX]}" "${VAR[$INDEX]}"
 		((INDEX++))
 		else
 			printf '%s\n' "$line"
