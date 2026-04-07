@@ -605,10 +605,10 @@ current_line=0
 
 while IFS= read -r line; do
     current_line=$((current_line + 1))
-	if [ $current_line -le $target_line ]; then
+	if [[ $current_line -le $target_line ]]; then
 		printf '%s\n' "$line"
 	else
-		if [ $current_line -eq $((target_line + 1)) ]; then
+		if [[ $current_line -eq $((target_line + 1)) ]]; then
 			# Insert the new staff class lines
 			for i in "${STAFF[@]}"; do
 				printf '\t%s%s:\\\n' "${STAFF[$i]}" "${VAR[$i]}"
