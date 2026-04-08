@@ -1,6 +1,9 @@
 
 OpenBSD setup script
 
+Warning: script may in the current form mess up your system,
+for now its advised to test on virtual machines only.
+
 This script sets a newly installed OpenBSD system up for daily desktop use,
 including following options:
 
@@ -9,13 +12,14 @@ including following options:
 - Singe user mode password protection
 - Hostname
 - doas setup
+- Package installation
 - Kernel options
 	- Hyperthreading
 	- Semaphores
 	- Shared memory limits
 	- system processes
 - Installing packages
-- Deamon setup
-- downloading and installng dotfiles repo
+- Daemon setup
+- downloading and installing dotfiles repo
 
 WORK IN PROGRESS
