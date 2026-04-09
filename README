@@ -2,7 +2,7 @@
 OpenBSD setup script
 
 Warning: script may in the current form mess up your system,
-for now its advised to test on virtual machines only.
+for now, its advised to test on virtual machines only.
 
 This script sets a newly installed OpenBSD system up for daily desktop use,
 including following options:

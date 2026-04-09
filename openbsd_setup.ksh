@@ -568,7 +568,10 @@ sleep 1
 # get created user 
 usr=$(getent passwd | awk -F: '$3 >= 1000 && $7 != "/sbin/nologin" { print $1 }')
 if [ -z "${usr}" ]; then
-    print "no user detected"
+    print "[ ER ] No user detected"
+	USR="false"
+else
+	USR="true"
 fi   
 
 # TODO add additional step to check for file
@@ -624,11 +627,14 @@ INDEX=0
 printf "[ OK ] File /etc/login.conf modified.\n"
 sleep 0.5
 
-# check for systems without users
-usermod -G staff $usr
-
-printf "[ OK ] %s added to staff group.\n" "$usr"
-sleep 0.5
+if [[ "$USR" == "true" ]]; then
+	# check for systems without users
+	usermod -G staff $usr
+	printf "[ OK ] %s added to staff group.\n" "$usr"
+	sleep 0.5
+else
+	printf "[ !! ] Skipping adding user to staff group.\n"
+fi
 
 # TODO
 # add ports tree download
