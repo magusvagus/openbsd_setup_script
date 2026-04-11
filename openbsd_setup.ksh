@@ -17,6 +17,30 @@ set -A ETH	\
 
 
 # print marked package list
+function printu
+{
+	typeset _index
+
+	_index=0
+
+	for USR in "${USERS[@]}"; do
+		if [[ "${SELECTU[$_index]}" == "false" ]]; then
+			BOX=" "
+		else
+			BOX="X"
+		fi
+
+		((_index++))
+		if [[ $(( $_index % 2 )) -eq 0 ]];then
+			printf "[%s] %2d. %-25s" "$BOX" "$_index" "${USR%-*}"
+			printf "\n"
+		else
+			printf "[%s] %2d. %-25s" "$BOX" "$_index" "${USR%-*}"
+		fi
+	done
+	printf "\n"
+}
+
 function printl
 {
 	typeset _index
@@ -565,15 +589,6 @@ sleep 0.5
 printf ">>> Setting up 'staff' group limits.\n"
 sleep 1
 
-# get created user 
-usr=$(getent passwd | awk -F: '$3 >= 1000 && $7 != "/sbin/nologin" { print $1 }')
-if [ -z "${usr}" ]; then
-    print "[ ER ] No user detected"
-	USR="false"
-else
-	USR="true"
-fi   
-
 # TODO add additional step to check for file
 
 # Define replacements as an array w/ hooks
@@ -627,13 +642,105 @@ INDEX=0
 printf "[ OK ] File /etc/login.conf modified.\n"
 sleep 0.5
 
+# get created user/s
+set -A USERS -- $(getent passwd | awk -F: '$3 >= 1000 && $7 != "/sbin/nologin" { print $1 }')
+
+if [ "${#USERS[@]}" -eq 0 ]; then
+    print "[ ER ] No user detected"
+	USR="false"
+elif [ "${#USERS[@]}" -eq 1 ]; then
+    print "[ !! ] One user detected"
+	USR="true"
+elif [ "${#USERS[@]}" -gt 1 ]; then
+    print "[ !! ] Multiple user detected"
+	USR="multi"
+fi   
+
+INDEX=0
 if [[ "$USR" == "true" ]]; then
 	# check for systems without users
-	usermod -G staff $usr
-	printf "[ OK ] %s added to staff group.\n" "$usr"
+	usermod -G staff "$USERS[0]"
+	printf "[ OK ] %s added to staff group.\n" "$USERS[0]"
 	sleep 0.5
+elif [[ "$USR" == "multi" ]]; then
+	set -A SELECTU
+	while [[ "$INDEX" -lt "${#USERS[@]}" ]]; do
+		SELECTU[$INDEX]="false"
+		((INDEX++))
+	done
+	INDEX=0
+
+	printu
+
+	# put in function
+	while true; do
+		# change quit to skip
+		printf ">>> Select user/s [Choose 1-%d], [s]kip, [o]k: " "${#USERS[@]}"
+		read ANSWER
+		if [[ "$ANSWER" == "s" ]]; then
+			printf "[ !! ] Skipping User selection...\n"
+			sleep 0.5
+			break
+
+		elif [[ "$ANSWER" == "o" ]]; then
+			for SELU in "${SELECTU[@]}"; do
+				if [[ $SELU == "true" ]]; then
+					usermod -G staff "${USERS[$INDEX]}"
+					printf "[ OK ] User \"%s\" added to staff group" "${USERS[$INDEX]}"
+					sleep 0.5
+					((INDEX++))
+					printf "\n"
+				else
+					((INDEX++))
+				fi
+			done
+			INDEX=0
+
+			# check if selection wasnt empty
+			CHECK="false"
+			for SEL in "${SELECTU[@]}"; do
+				if [[ "$SEL" == "true" ]]; then
+					CHECK="true"
+				fi
+			done
+
+			if [[ "$CHECK" == "true" ]]; then
+				printf "[ OK ] User/s chosen.\n"
+				break
+			else
+				print "[ ER ] No User chosen.\n"
+			fi
+
+			printu
+
+		# check if input is an integer
+		elif case $ANSWER in *[!0-9]*) false;; *) true;; esac; then
+			# check if number input is in rane
+			if [[ "$ANSWER" -le "${#USERS[@]}" && "$ANSWER" -ge 1 ]]; then
+				ANSWER=$(( $ANSWER - 1 ))
+
+				# turn on or off
+				if [[ "${SELECTU[$ANSWER]}" == "true" ]]; then
+					SELECTU[$ANSWER]="false"
+					printu
+				else
+					SELECTU[$ANSWER]="true"
+					printu
+				fi
+
+			else	
+				printf "[ ER ] Invalid input.\n"
+			fi
+
+		else
+			printf "[ ER ] Invalid input.\n"
+		fi
+
+		INDEX=0
+	done
+
 else
-	printf "[ !! ] Skipping adding user to staff group.\n"
+	printf "[ !! ] Skipping: Adding user to staff group.\n"
 fi
 
 # TODO
