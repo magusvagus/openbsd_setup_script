@@ -744,6 +744,7 @@ else
 fi
 
 # TODO
+# add user setup before doas setup
 # add ports tree download
 # fix semaphores
 # if files not present, check and create.
