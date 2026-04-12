@@ -79,6 +79,48 @@ else
 fi
 
 
+# #################
+# CHEK/ Create USER
+# #################
+
+# get created user/s
+set -A USERS -- $(getent passwd | awk -F: '$3 >= 1000 && $7 != "/sbin/nologin" { print $1 }')
+
+if [ "${#USERS[@]}" -eq 0 ]; then
+    print "[ ER ] No user detected"
+	USR="false"
+elif [ "${#USERS[@]}" -eq 1 ]; then
+    print "[ !! ] One user detected"
+	USR="true"
+elif [ "${#USERS[@]}" -gt 1 ]; then
+    print "[ !! ] Multiple user detected"
+	USR="multi"
+fi   
+
+if [[ "$USR" == "false" ]]; then
+	while true; do
+		printf ">>> Create new user? [y]es, [n]o: "
+		read ANSWER
+		if [[ "$ANSWER" == "y" ]]; then
+			printf ">>> Enter user name: "
+			read USER_INPUT
+			printf ">>> Set user password: "
+			read PASSWORD
+			ENCRYPTED_PASS=$(encrypt $PASSWORD)
+			useradd -m -p "$ENCRYPTED_PASS" "$USER_INPUT"
+			printf "[ OK ] New user created\n"
+			sleep 0.5
+
+		elif [[ "$ANSWER" == "n" ]]; then
+			printf "[ !! ] Skipping user creation\n"
+			USR="false"
+			break
+		else
+			printf "[ ER ] Invalid input.\n"
+		fi
+	done
+fi
+
 # ##################
 # NETWORK CONNECTION
 # ##################
@@ -642,19 +684,6 @@ INDEX=0
 printf "[ OK ] File /etc/login.conf modified.\n"
 sleep 0.5
 
-# get created user/s
-set -A USERS -- $(getent passwd | awk -F: '$3 >= 1000 && $7 != "/sbin/nologin" { print $1 }')
-
-if [ "${#USERS[@]}" -eq 0 ]; then
-    print "[ ER ] No user detected"
-	USR="false"
-elif [ "${#USERS[@]}" -eq 1 ]; then
-    print "[ !! ] One user detected"
-	USR="true"
-elif [ "${#USERS[@]}" -gt 1 ]; then
-    print "[ !! ] Multiple user detected"
-	USR="multi"
-fi   
 
 INDEX=0
 if [[ "$USR" == "true" ]]; then
