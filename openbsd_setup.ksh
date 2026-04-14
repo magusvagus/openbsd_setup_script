@@ -87,13 +87,22 @@ fi
 set -A USERS -- $(getent passwd | awk -F: '$3 >= 1000 && $7 != "/sbin/nologin" { print $1 }')
 
 if [ "${#USERS[@]}" -eq 0 ]; then
-    print "[ ER ] No user detected"
+    printf "[ ER ] No user detected"
 	USR="false"
-elif [ "${#USERS[@]}" -eq 1 ]; then
-    print "[ !! ] One user detected"
+# ceck if user exist but script is run as root
+elif [ "${#USERS[@]}" -eq 1 && "$(whoami)" == "root" ]; then
+    printf "[ !! ] One user detected"
+	USR="true"
+	if [[ -z "/home/$USERS[0]" ]]; then
+		printf "[ OK ] Directory /home/%s/ detected.\n" "$USERS[0]"
+		sleep 0.5
+	fi
+# ceck if current user is run
+elif [ "${#USERS[@]}" -eq 1 && "$(whoami)" != "root" ]; then
+    printf "[ !! ] One user detected"
 	USR="true"
 elif [ "${#USERS[@]}" -gt 1 ]; then
-    print "[ !! ] Multiple user detected"
+    printf "[ !! ] Multiple user detected"
 	USR="multi"
 fi   
 
@@ -104,12 +113,15 @@ if [[ "$USR" == "false" ]]; then
 		if [[ "$ANSWER" == "y" ]]; then
 			printf ">>> Enter user name: "
 			read USER_INPUT
+			USR_NAME=$USER_INPUT
 			printf ">>> Set user password: "
 			read PASSWORD
 			ENCRYPTED_PASS=$(encrypt $PASSWORD)
 			useradd -m -p "$ENCRYPTED_PASS" "$USER_INPUT"
-			printf "[ OK ] New user created\n"
+			printf "[ OK ] New user '%s' created\n" "$USER_INPUT"
 			sleep 0.5
+			USERS[0]="$USER_INPUT"
+
 
 		elif [[ "$ANSWER" == "n" ]]; then
 			printf "[ !! ] Skipping user creation\n"
