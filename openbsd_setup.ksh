@@ -90,47 +90,29 @@ if [ "${#USERS[@]}" -eq 0 ]; then
     printf "[ ER ] No user detected"
 	USR="false"
 # ceck if user exist but script is run as root
-elif [ "${#USERS[@]}" -eq 1 && "$(whoami)" == "root" ]; then
+elif [ "${#USERS[@]}" -eq 1 ]; then
     printf "[ !! ] One user detected"
 	USR="true"
-	if [[ -z "/home/$USERS[0]" ]]; then
-		printf "[ OK ] Directory /home/%s/ detected.\n" "$USERS[0]"
-		sleep 0.5
-	fi
-# ceck if current user is run
-elif [ "${#USERS[@]}" -eq 1 && "$(whoami)" != "root" ]; then
-    printf "[ !! ] One user detected"
-	USR="true"
+# ceck if current user is logged in
 elif [ "${#USERS[@]}" -gt 1 ]; then
     printf "[ !! ] Multiple user detected"
 	USR="multi"
 fi   
 
 if [[ "$USR" == "false" ]]; then
-	while true; do
-		printf ">>> Create new user? [y]es, [n]o: "
-		read ANSWER
-		if [[ "$ANSWER" == "y" ]]; then
-			printf ">>> Enter user name: "
-			read USER_INPUT
-			USR_NAME=$USER_INPUT
-			printf ">>> Set user password: "
-			read PASSWORD
-			ENCRYPTED_PASS=$(encrypt $PASSWORD)
-			useradd -m -p "$ENCRYPTED_PASS" "$USER_INPUT"
-			printf "[ OK ] New user '%s' created\n" "$USER_INPUT"
-			sleep 0.5
-			USERS[0]="$USER_INPUT"
+	printf ">>> Creating new user"
 
+	printf ">>> Enter user name: "
+	read USER_NAME
+	USR_NAME=$USER_INPUT
 
-		elif [[ "$ANSWER" == "n" ]]; then
-			printf "[ !! ] Skipping user creation\n"
-			USR="false"
-			break
-		else
-			printf "[ ER ] Invalid input.\n"
-		fi
-	done
+	printf ">>> Set user password: "
+	read PASSWORD
+	adduser -unencrypted -batch "$USER_NAME" wheel $USER_NAME $PASSWORD
+	printf "[ OK ] New user '%s' created\n" "$USER_INPUT"
+	sleep 0.5
+
+	set -A USERS -- $(getent passwd | awk -F: '$3 >= 1000 && $7 != "/sbin/nologin" { print $1 }')
 fi
 
 # ##################
@@ -443,7 +425,7 @@ permit nopass %s as root cmd /sbin/init
 # permit this command for slstatus to use volume indication
 permit nopass %s as root cmd sndioctl args output.level
 # display brightness permission in .kshrc
-permit nopass %s as root cmd wsconsctl args display.brightness=" "$USER" "$USER" "$USER" "$USER" "$USER" \
+permit nopass %s as root cmd wsconsctl args display.brightness=" "$USERS[0]" "$USERS[0]" "$USERS[0]" "$USERS[0]" "$USERS[0]" \
 > /etc/doas.conf
 
 printf "[ OK ] File /etc/doas.conf modified.\n"
@@ -699,7 +681,6 @@ sleep 0.5
 
 INDEX=0
 if [[ "$USR" == "true" ]]; then
-	# check for systems without users
 	usermod -G staff "$USERS[0]"
 	printf "[ OK ] %s added to staff group.\n" "$USERS[0]"
 	sleep 0.5
