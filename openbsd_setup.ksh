@@ -765,9 +765,28 @@ else
 	printf "[ !! ] Skipping: Adding user to staff group.\n"
 fi
 
+# ##################
+# INSTALL PORTS TREE
+# ##################
+
+while true; do
+	printf ">>> Install ports tree? [y]es, [n]o:"
+	read ANSWER
+	if [[ "$ANSWER" == "y" ]]; then
+		cd /tmp
+		ftp https://cdn.openbsd.org/pub/OpenBSD/"$USERS[0]"/ports.tar.gz
+		cd /usr
+		doas tar xzf /tmp/ports.tar.gz   
+		printf "[ OK ] Ports tree installed.\n"
+	elif [[ "$ANSWER" == "n" ]]; then
+		printf "[ !! ] Skipping: Installing ports tree.\n"
+		break
+	else
+		printf "[ ER ] Invalid input.\n"
+	fi
+done
+
 # TODO
-# add user setup before doas setup
-# add ports tree download
 # fix semaphores
 # if files not present, check and create.
 # intro screen
