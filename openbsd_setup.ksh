@@ -15,6 +15,17 @@ set -A ETH	\
 	"vr0"	\
 	"xl0"	\
 
+# check file function (give full path)
+function check_file
+{
+	if [[ -z "$1" ]]; then
+		return 0
+	else
+		printf "[ !! ] File does not exist, creating %s" "$1"
+		touch "$1"
+	fi
+}
+
 
 # print marked package list
 function printu
@@ -770,7 +781,7 @@ fi
 # ##################
 
 while true; do
-	printf ">>> Install ports tree? [y]es, [n]o:"
+	printf ">>> Install ports tree? [y]es, [n]o: "
 	read ANSWER
 	if [[ "$ANSWER" == "y" ]]; then
 		cd /tmp
@@ -785,6 +796,7 @@ while true; do
 		printf "[ ER ] Invalid input.\n"
 	fi
 done
+
 
 # TODO
 # fix semaphores
