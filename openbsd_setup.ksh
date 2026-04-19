@@ -799,6 +799,7 @@ done
 
 
 # TODO
+# set wsconsctl.conf (workstation console access)
 # fix semaphores
 # if files not present, check and create.
 # intro screen
