@@ -311,6 +311,7 @@ set -A PACKAGES\
 	"keynav-0.20101014.3067p4v0"\
 	"py3-python-lsp-server-1.12.2"\
 	"neovim-0.11.4"\
+	"rsync-3.4.1-minimal" \
 
 # create list equal to number of packets
 set -A SELECT
