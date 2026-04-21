@@ -312,6 +312,7 @@ set -A PACKAGES\
 	"py3-python-lsp-server-1.12.2"\
 	"neovim-0.11.4"\
 	"rsync-3.4.1-minimal" \
+	"nmap-7.92p1" \
 
 # create list equal to number of packets
 set -A SELECT
