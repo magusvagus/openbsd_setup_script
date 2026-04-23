@@ -18,7 +18,7 @@ set -A ETH	\
 # check file function (give full path)
 function check_file
 {
-	if [[ -f "$1" ]]; then
+	if [[ -e "$1" ]]; then
 		return 0
 	else
 		printf "[ !! ] File does not exist, creating %s" "$1"
